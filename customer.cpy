@@ -1,0 +1,11 @@
+01 CUST-REC.
+    05 CUST-ID       PIC 9(5).
+    05 CUST-NAME     PIC X(50).
+    05 CUST-BIRTH    PIC X(10).
+    05 CUST-JOB      PIC X(30).
+    05 CUST-EMAIL    PIC X(50).
+    05 CUST-PHONE    PIC X(20).
+    05 CUST-STREET   PIC X(50).
+    05 CUST-CITY     PIC X(50).
+    05 CUST-ZIP      PIC X(10).
+
