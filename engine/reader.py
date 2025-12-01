@@ -34,8 +34,11 @@ class CobolDataReader:
             item = self.tree.insert("", "end", text=f" {full_name}")
             self.tables[item] = {"name": full_name, "dat_path": dat_path, "cpy_path": cpy_path}
             found += 1
-
-        self.log("COMPLETE!", f"FOUND {found} COBOL table!" if found else "NOT FOUND .dat + .cpy!")
+        if found == 0:
+            self.log("NOT FOUND .dat + .cpy!")
+        else:
+            self.log("COMPLETE!", f"FOUND {found} COBOL table!")
+            
     def log(self, message, level="INFO"):
         import datetime
         ts = datetime.datetime.now().strftime("%H:%M:%S")
