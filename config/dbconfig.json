@@ -1,0 +1,8 @@
+{
+  "CUSTOMER": {
+    "file": "database/CUSTOMER.dat",
+    "copybook": "copybooks/CUSTOMER.cpy",
+    "record-length": 275,
+    "key": "CUST-ID"
+  }
+}
