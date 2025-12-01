@@ -15,7 +15,7 @@ echo ""
 
 INSTALL_DIR="$HOME/.ssam"
 BIN_DIR="$HOME/.local/bin"
-mkdir -p "$INSTALL_DIR" "$BIN_DIR"
+mkdir -p "$INSTALL_DIR" "$BIN_DIR" 2>/dev/null || true
 cd "$INSTALL_DIR"
 
 # XÓA BẢN CŨ - PHẢI ĐÚNG TÊN THƯ MỤC
