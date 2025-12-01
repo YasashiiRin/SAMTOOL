@@ -3,14 +3,6 @@ from gui.viewer import CobolProjectViewer
 import tkinter as tk
 import os
 from pathlib import Path
-from PySide6.QtWidgets import (
-    QApplication, QMainWindow, QWidget, QTreeWidget, QTreeWidgetItem, 
-    QVBoxLayout, QTextEdit, QTableWidget, QTableWidgetItem, QSplitter,
-    QPushButton, QFileDialog, QLabel
-)
-from PySide6.QtCore import Qt
-from PySide6.QtGui import QPalette, QColor, QFont
-
 from engine.reader import CobolDataReader
 
 if __name__ == "__main__":
