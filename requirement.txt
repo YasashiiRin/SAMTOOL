@@ -2,7 +2,6 @@ altgraph==0.17.5
 copybook==1.0.16
 customtkinter==5.2.2
 darkdetect==0.8.0
-numpy==2.3.5
 packaging==25.0
 pandas==2.3.3
 pillow==12.0.0
