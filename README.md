@@ -1,3 +1,9 @@
+<p align="center">
+  <img src="assets/exp.png" width="300">
+</p>
+
+
+
 ## INSTALL
 - sh -c "$(curl -fsSL https://raw.githubusercontent.com/YasashiiRin/SAMTOOL/main/install.sh)"
 
