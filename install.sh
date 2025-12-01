@@ -38,7 +38,14 @@ echo "[2/4] Creating isolated Python environment..."
 python3 -m venv venv
 
 echo "[3/4] Installing Python packages (inside venv)..."
+# Cài hai thư viện cơ bản
 venv/bin/pip install ttkbootstrap pillow
+
+# ⭐ Cài toàn bộ thư viện trong requirement.txt (Fix PySide6 missing)
+if [ -f "requirement.txt" ]; then
+    echo "   → Installing requirements from requirement.txt..."
+    venv/bin/pip install -r requirement.txt
+fi
 
 echo "[4/4] Checking GnuCOBOL..."
 if ! command -v cobc >/dev/null 2>&1; then
