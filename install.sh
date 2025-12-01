@@ -1,6 +1,6 @@
 #!/bin/bash
 # ==================================================
-# SSAM 2025 - Installer with Python Version Check
+# SSAM 2025 - Installer (Full version with Tkinter Check)
 # ==================================================
 
 set -e
@@ -38,7 +38,6 @@ fi
 
 PY_VER=$(python3 -c 'import sys; print(f"{sys.version_info.major}.{sys.version_info.minor}")')
 
-# Compare versions
 version_lt() { [ "$(printf '%s\n' "$1" "$2" | sort -V | head -n1)" != "$2" ]; }
 
 if version_lt "$PY_VER" "$REQUIRED_PY"; then
@@ -57,6 +56,55 @@ if version_lt "$PY_VER" "$REQUIRED_PY"; then
 fi
 
 echo "✔ Python version OK: $PY_VER"
+echo ""
+
+# ==================================================
+#  CHECK TKINTER SUPPORT
+# ==================================================
+echo "[Checking Tkinter support...]"
+
+if ! python3 - << 'EOF'
+import tkinter
+print("Tkinter OK")
+EOF
+then
+    echo "❌ Tkinter is NOT available in your Python installation."
+    echo ""
+    echo "SSAM requires Tkinter (needed by ttkbootstrap)."
+    echo ""
+
+    case "$(uname)" in
+        Darwin*)
+            echo "macOS:"
+            echo "  Option A (Recommended): Install Python from python.org (comes with Tkinter)"
+            echo "     https://www.python.org/downloads/"
+            echo ""
+            echo "  Option B (Homebrew): Install tcl-tk + rebuild python"
+            echo "     brew install tcl-tk"
+            echo "     echo 'export PATH=\"$(brew --prefix tcl-tk)/bin:\$PATH\"' >> ~/.zshrc"
+            echo "     echo 'export LDFLAGS=\"-L$(brew --prefix tcl-tk)/lib\"' >> ~/.zshrc"
+            echo "     echo 'export CPPFLAGS=\"-I$(brew --prefix tcl-tk)/include\"' >> ~/.zshrc"
+            echo "     echo 'export PKG_CONFIG_PATH=\"$(brew --prefix tcl-tk)/lib/pkgconfig\"' >> ~/.zshrc"
+            echo "     source ~/.zshrc"
+            echo "     brew reinstall python"
+            ;;
+        Linux*)
+            echo "Ubuntu/Debian:"
+            echo "  sudo apt install python3-tk"
+            echo ""
+            echo "Arch Linux:"
+            echo "  sudo pacman -S tk"
+            echo ""
+            echo "Fedora:"
+            echo "  sudo dnf install python3-tkinter"
+            ;;
+    esac
+
+    echo ""
+    exit 1
+fi
+
+echo "✔ Tkinter support OK"
 echo ""
 
 # ==================================================
@@ -81,6 +129,7 @@ echo "[2/4] Creating isolated Python environment..."
 python3 -m venv venv
 
 echo "[3/4] Installing Python packages (inside venv)..."
+venv/bin/pip install --upgrade pip setuptools wheel
 venv/bin/pip install ttkbootstrap pillow
 
 if [ -f "requirement.txt" ]; then
@@ -94,7 +143,7 @@ if ! command -v cobc >/dev/null 2>&1; then
     case "$(uname)" in
         Linux*)
             (command -v apt >/dev/null && sudo apt update && sudo apt install -y gnucobol) ||
-            (command -v dnf >/devnull && sudo dnf install -y gnu-cobol) ||
+            (command -v dnf >/dev/null && sudo dnf install -y gnu-cobol) ||
             (command -v pacman >/dev/null && sudo pacman -Sy --noconfirm gnu-cobol)
             ;;
         Darwin*)
