@@ -47,6 +47,7 @@ Các file `.cpy` là **copybook COBOL**, dùng để mô tả cấu trúc của 
     05 CUST-ID        PIC 9(6).
     05 CUST-NAME      PIC X(30).
     05 STATUS         PIC 9(1).
+```    
 
 
 ## 4. ⚠️ Lưu ý quan trọng về file `.cpy`
@@ -71,7 +72,7 @@ Trong COBOL, file `.cpy` thường được dùng để:
 01 PRODUCT-REC.
     05 PROD-ID        PIC 9(5).
     05 PROD-NAME      PIC X(40).
-
+```
 ✘ **Không hợp lệ** (chứa khai báo Working-Storage):
 77 WS-TEMP        PIC X(10).
 77 WS-COUNT       PIC 9(4).
