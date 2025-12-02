@@ -10,7 +10,7 @@
 - echo 'export PATH="$HOME/.local/bin:$PATH"' >> ~/.zshrc
 - source ~/.zshrc
 
-
+## Kết nối - kết nối hoàn toàn với thư mục dự án
 # 📘 SSAM – Quy ước lưu trữ & mô tả cấu trúc dữ liệu
 
 ## 1. 📂 File `.dat , .db`
