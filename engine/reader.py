@@ -9,7 +9,11 @@ class CobolDataReader:
     def scan_cobol_project(self, project_path):
         self.tables.clear()
         self.tree.delete(*self.tree.get_children())
-        dat_files = [os.path.join(r, f) for r, _, fs in os.walk(project_path) for f in fs if f.lower().endswith(".dat")]
+        dat_files = []
+        for root, _, files in os.walk(project_path):
+            for f in files:
+                if f.lower().endswith((".dat", ".db")):
+                    dat_files.append(os.path.join(root, f))
         found = 0
         for dat_path in dat_files:
             full_name = Path(dat_path).stem.upper()

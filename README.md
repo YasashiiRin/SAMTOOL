@@ -13,7 +13,7 @@
 
 # 📘 SSAM – Quy ước lưu trữ & mô tả cấu trúc dữ liệu
 
-## 1. 📂 File `.dat`
+## 1. 📂 File `.dat , .db`
 - Là file **dữ liệu nhị phân**.
 - Là nguồn dữ liệu chính của hệ thống.
 - Được đọc/ghi bởi chương trình COBOL hoặc SSAM Viewer.
@@ -29,9 +29,14 @@ employee.dat
 
 ## 2. 🧩 File `.cpy` – File mô tả cấu trúc dữ liệu
 
-Các file `.cpy` là **copybook COBOL**, dùng để mô tả cấu trúc của file `.dat`.
+Các file `.cpy` là **copybook COBOL**, dùng để mô tả cấu trúc của file `.dat, .db`.
+### 🔶 Lưu ý quan trọng
+không nên gộp chung copybook mô tả cấu trúc dữ liệu VSAM (FD copybook) với copybook dùng cho WORKING-STORAGE (WS copybook).
+Thông lệ chuẩn và cả lợi ích thực tế đều khuyến nghị tách rời.
 
-### ✅ Quy tắc bắt buộc
+và SSAM cũng cũng thực hiện cơ chế quét dữ liệu theo cấu trúc này
+
+### ✅ Quy ước đặt tên file `.cpy` cho SSAM
 
 | File dữ liệu | File mô tả cấu trúc | Ghi chú |
 |--------------|----------------------|---------|
@@ -39,14 +44,22 @@ Các file `.cpy` là **copybook COBOL**, dùng để mô tả cấu trúc của 
 | employee.dat | employee.cpy         | ✔ Hợp lệ |
 | data1.dat    | data1.cpy            | ✔ OK |
 
+### ✅ Cấu trúc mẫu
+```cobol
+database/
+├── CUST-MASTER.dat
+shared/
+├── CUST-MASTER.cpy          ← CHỈ chứa FD + 01 record (dùng cho FILE SECTION)
+├── CUST-MASTER-WS.cpy       ← CHỈ chứa Working-Storage (dùng cho chương trình xử lý)
+```
 ### Điều kiện:
 - Tên file **phải trùng 100%** trước phần mở rộng.  
 - **Mỗi file `.dat` bắt buộc có một file `.cpy` tương ứng.**  
-- File `.cpy` phải mô tả **đầy đủ cấu trúc record** (PIC, OCCURS, COMP, v.v.).
+- File `.cpy` phải mô tả **đầy đủ cấu trúc record**
 
 ---
 
-## 3. 📝 Ví dụ về file `.cpy` đúng chuẩn
+## 3. 📝 Ví dụ về file `.cpy` cho FD đúng chuẩn
 
 ```cobol
 01 CUSTOMER-REC.
