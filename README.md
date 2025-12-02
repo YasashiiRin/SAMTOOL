@@ -22,7 +22,7 @@
 **Ví dụ:**
 customer.dat
 transaction.dat
-employee.dat
+employee.db
 
 
 ---
@@ -34,7 +34,7 @@ Các file `.cpy` là **copybook COBOL**, dùng để mô tả cấu trúc của 
 không nên gộp chung copybook mô tả cấu trúc dữ liệu VSAM (FD copybook) với copybook dùng cho WORKING-STORAGE (WS copybook).
 Thông lệ chuẩn và cả lợi ích thực tế đều khuyến nghị tách rời.
 
-và SSAM cũng cũng thực hiện cơ chế quét dữ liệu theo cấu trúc này
+và SSAM cũng cũng thực hiện cơ chế quét dữ liệu theo quy uoc này
 
 ### ✅ Quy ước đặt tên file `.cpy` cho SSAM
 
@@ -133,7 +133,8 @@ customer_struct.cpy
 - Chuẩn hóa quy trình phát triển và bảo trì.
 
 ---
-
+## 7. 🎯 Hướng phát triển
+- môi trường quản lý dữ liệu có thể thực hiện các hành động với dữ liệu
 
 
 
