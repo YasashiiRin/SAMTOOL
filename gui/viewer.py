@@ -97,7 +97,7 @@ class CobolProjectViewer():
         self.right_frame = right_frame
 
         self.lbl_status = tk.Label(right_frame, text="Ready", anchor="w", relief=tk.SUNKEN,
-                                   bg="#1e1e1e", fg="#f4fff9", font=("Consolas", 10))
+                                   bg="#1e1e1e", fg="#f4fff9", font=("Consolas", 8))
         self.lbl_status.pack(fill=tk.X, side=tk.BOTTOM)
 
         # Log box
@@ -105,7 +105,7 @@ class CobolProjectViewer():
         log_frame.pack(fill=tk.X, pady=8, padx=10)
         tk.Label(log_frame, text="LOG", fg="#00ff00", bg="#0a0a0a",
                  font=("Consolas", 11, "bold")).pack(anchor="w")
-        self.data_text = tk.Text(log_frame, height=4, font=("Consolas", 9), bg="#0f0f0f", fg="#ffffff",
+        self.data_text = tk.Text(log_frame, height=4, font=("Consolas", 8), bg="#0f0f0f", fg="#ffffff",
                                  insertbackground="white")
         self.data_text.pack(fill=tk.X, padx=5, pady=5)
         self.setup_data_table()
@@ -165,13 +165,13 @@ class CobolProjectViewer():
                         foreground="white",
                         rowheight=30,
                         fieldbackground="#2b2b2b",
-                        font=("Consolas", 10),
+                        font=("Consolas", 9),
                         borderwidth=1)
 
         style.configure("Treeview.Heading",
                         background="#1e1e1e",
                         foreground="#ffea8f",
-                        font=("Consolas", 11, "bold"))
+                        font=("Consolas", 9, "bold"))
 
         style.map('Treeview', background=[('selected', '#0078d7')])
 
