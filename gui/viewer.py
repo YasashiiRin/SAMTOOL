@@ -56,26 +56,8 @@ class CobolProjectViewer():
             width=9,
         )
         self.file_btn.pack(side=tk.LEFT, padx=6, pady=0)
-
-        # Tạo menu popup
-        self.file_menu = tk.Menu(self.file_btn, tearoff=0, bg="#2d2d2d", fg="white",
-                                 activebackground="#007acc", activeforeground="white",
-                                 font=("Segoe UI", 5))
-        self.file_menu.add_command(command=self.connect_project)
-        self.file_menu.add_separator()
-        self.file_menu.add_command(command=self.root.quit)
-
-        def show_file_menu(event=None):
-            try:
-                self.file_menu.tk_popup(event.x_root, event.y_root)
-            finally:
-                self.file_menu.grab_release()
-
-        # #click left - right to open menu
-        self.file_btn.bind("<Button-1>", show_file_menu)
-        self.file_btn.bind("<Button-2>", show_file_menu)
-        self.file_btn.bind("<Button-3>", show_file_menu)
-
+        self.file_btn.config(command=self.connect_project)
+        
         # --- button Refresh ---
         try:
             img_refresh = tk.PhotoImage(file="assets/arrows.png")
