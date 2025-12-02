@@ -109,6 +109,16 @@ class CobolProjectViewer():
                                  insertbackground="white")
         self.data_text.pack(fill=tk.X, padx=5, pady=5)
         self.setup_data_table()
+
+        self.reader = CobolDataReader()
+        self.reader.root = root
+        self.reader.tree = self.tree
+        self.reader.tree_data = self.tree_data
+        self.reader.data_text = self.data_text
+        self.reader.lbl_status = self.lbl_status
+        self.reader.display_table_data = self.display_table_data
+        self.reader.tables = self.tables
+
     def create_tooltip(self, widget, text):
         def on_enter(event):
             x, y, _, _ = widget.bbox("insert")
@@ -228,11 +238,9 @@ class CobolProjectViewer():
         self.btn_refresh.config(state="disabled")
         self.btn_refresh.config(text=" Refreshing...")
         
-        # Xóa bảng cũ
         self.tree.delete(*self.tree.get_children())
         self.tables.clear()
-
-        # Quét lại
+        
         self.root.after(100, lambda: self._do_refresh())
 
     def _do_refresh(self):
@@ -277,8 +285,7 @@ class CobolProjectViewer():
         self.log(f"File: {info['dat_path']}")
         self.log(f"Copybook: {info['cpy_path']}\n")
         
-        CobolDataReader.generate_and_run_cobol_reader(
-            self,
+        self.reader.generate_and_run_cobol_reader(
             info['dat_path'],
             info['cpy_path'],
             info['name']

@@ -4,8 +4,88 @@ import tempfile
 import shutil
 from pathlib import Path
 import os
+import tkinter as tk
+import re
 from tkinter import ttk, filedialog, messagebox
 class CobolDataReader:
+
+    def validate_and_parse_copybook(self, cpy_path):
+        errors = []
+        warnings = []
+        field_names = []
+        line_number = 0
+        seen_01_count = 0
+
+        try:
+            with open(cpy_path, "r", encoding="utf-8-sig") as f:
+                lines = f.readlines()
+        except Exception as e:
+            return None, [f"35: {e}"]
+
+        for raw in lines:
+            line_number += 1
+            if not raw.strip() or raw.strip().startswith("*"):
+                continue
+            if len(raw) > 6:
+                content = raw[6:].strip()
+                upper = content.upper()
+            else:
+                continue
+
+            if re.match(r"^\s*01\s+", raw):
+                seen_01_count += 1
+                if seen_01_count > 1:
+                    errors.append(f"Dòng {line_number}: There are multiple 1 '01 record' → not supported!")
+                continue
+
+            if "OCCURS" in upper:
+                errors.append(f"Dòng {line_number}: Have OCCURS → only support flat record!")
+            if "VALUE " in upper or " VALUES " in upper:
+                errors.append(f"Dòng {line_number}: Have VALUE → this is a data sample, not structure!")
+            if "REDEFINES" in upper:
+                errors.append(f"Dòng {line_number}: Have REDEFINES → Not supported!")
+            if "DEPENDING ON" in upper:
+                errors.append(f"Dòng {line_number}: Have DEPENDING ON → Not supported!")
+
+            level_match = re.match(r"^\s*(\d+)", raw)
+            if not level_match:
+                continue
+            level = int(level_match.group(1))
+
+            if level >= 5 and level <= 49:
+                if not ("PIC " in upper or "PICTURE " in upper):
+                    continue
+                if "FILLER" in upper:
+                    continue
+
+                name_part = content.split("PIC")[0].split("PICTURE")[0].strip()
+                field_name = name_part.split()[0].rstrip(".").strip()
+                if field_name and field_name not in field_names:
+                    field_names.append(field_name)
+
+        if seen_01_count == 0:
+            errors.append("Miss '01 XXX-REC.' → Is not copybook for file indexed!")
+        if seen_01_count > 1:
+            errors.append("There are multiple '01 record' → not supported !")
+        if not field_names:
+            errors.append("No fields found (requires level 05+ with PIC) → Copybook structure incorrect!")
+
+        all_numeric = all(f and f[0].isdigit() for f in field_names)
+        if all_numeric and field_names:
+            warnings.append("WARNING: start with number → error-prone compile COBOL!")
+            warnings.append("         → SUGGES: format CUST-ID, ORDER-NO, ACCT-NO...")
+
+        if any(keyword in " ".join(errors) for keyword in ["OCCURS", "VALUE", "REDEFINES", "nhiều hơn 1", "THIẾU '01"]):
+            errors.append("")
+            errors.append("CONCLUSION: This Copybook is NOT SUITABLE for reading INDEXED files!")
+            errors.append("→ SUPPORT: 1 record 01 + fields 05 normal (flat record)")
+            return None, errors
+
+        if errors:
+            return field_names, errors + warnings
+        else:
+            return field_names, ["CHECK OK -> READING!"] + warnings
+        
     def scan_cobol_project(self, project_path):
         self.tables.clear()
         self.tree.delete(*self.tree.get_children())
@@ -57,11 +137,27 @@ class CobolDataReader:
             self.root.update_idletasks()
 
     def generate_and_run_cobol_reader(self, dat_path, cpy_path, table_name):
-        self.log(f"Đang đọc bảng: {table_name}", "INFO")
+        self.log(f"CHECKING STRUCTURE TABLE: {table_name}", "INFO")
+        field_names_validated, issues = self.validate_and_parse_copybook(cpy_path)
+
+        if field_names_validated is None:
+            self.log("CANNOT READ: Copybook does not match INDEXED file!", "ERROR")
+            for issue in issues:
+                self.log(issue, "ERROR")
+            self.lbl_status.config(text=f"{table_name} → not supported!")
+            return
+
+        for issue in issues:
+            if "đạt chuẩn" in issue:
+                self.log(issue, "OK")
+            else:
+                self.log(issue, "WARN")
+
+        self.log(f"Copybook check OK! READING...", "OK")
+        self.log(f"READING..: {table_name}", "INFO")
         for item in self.tree_data.get_children():
             self.tree_data.delete(item)
 
-        # 1. Lấy danh sách field
         with open(cpy_path, "r", encoding="utf-8-sig") as f:
             lines = [line.strip() for line in f if line.strip() and line.lstrip().startswith("05")]
 
