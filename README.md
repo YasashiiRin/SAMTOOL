@@ -9,6 +9,7 @@
 
 - echo 'export PATH="$HOME/.local/bin:$PATH"' >> ~/.zshrc
 - source ~/.zshrc
+- samm
 
 ## Kết nối - kết nối hoàn toàn với thư mục dự án
 # 📘 SSAM – Quy ước lưu trữ & mô tả cấu trúc dữ liệu
