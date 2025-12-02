@@ -38,17 +38,43 @@ class CobolProjectViewer():
         app_name.pack(side=tk.LEFT, padx=10, pady=6)
 
         # ---fake menue File ---
-        file_btn = tk.Menubutton(topbar, text="File", bg="#252526", fg="white",
-                                 activebackground="#3c3c3c", activeforeground="white",
-                                 relief="flat", font=("Segoe UI", 10))
-        file_btn.pack(side=tk.LEFT, padx=2, pady=4)
+        # file_btn = tk.Menubutton(topbar, text="File", bg="#252526", fg="white",
+        #                          activebackground="#3c3c3c", activeforeground="white",
+        #                          relief="flat", font=("Segoe UI", 10))
+        # file_btn.pack(side=tk.LEFT, padx=2, pady=4)
 
-        file_menu = tk.Menu(file_btn, tearoff=0, bg="#2d2d2d", fg="white",
-                            activebackground="#007acc", activeforeground="white")
-        file_btn.config(menu=file_menu)
-        file_menu.add_command(label="Connect Project...", command=self.connect_project)
-        file_menu.add_separator()
-        file_menu.add_command(label="Exit", command=root.quit)
+        # file_menu = tk.Menu(file_btn, tearoff=0, bg="#2d2d2d", fg="white",
+        #                     activebackground="#007acc", activeforeground="white")
+        # file_btn.config(menu=file_menu)
+        # file_menu.add_command(label="Connect Project...", command=self.connect_project)
+        # file_menu.add_separator()
+        # file_menu.add_command(label="Exit", command=root.quit)
+        self.file_btn = ttk.Button(
+            topbar,
+            text="Connection",
+            bootstyle="secondary-outline",
+            width=9,
+        )
+        self.file_btn.pack(side=tk.LEFT, padx=6, pady=0)
+
+        # Tạo menu popup
+        self.file_menu = tk.Menu(self.file_btn, tearoff=0, bg="#2d2d2d", fg="white",
+                                 activebackground="#007acc", activeforeground="white",
+                                 font=("Segoe UI", 5))
+        self.file_menu.add_command(command=self.connect_project)
+        self.file_menu.add_separator()
+        self.file_menu.add_command(command=self.root.quit)
+
+        def show_file_menu(event=None):
+            try:
+                self.file_menu.tk_popup(event.x_root, event.y_root)
+            finally:
+                self.file_menu.grab_release()
+
+        # #click left - right to open menu
+        self.file_btn.bind("<Button-1>", show_file_menu)
+        self.file_btn.bind("<Button-2>", show_file_menu)
+        self.file_btn.bind("<Button-3>", show_file_menu)
 
         # --- button Refresh ---
         try:
@@ -64,6 +90,14 @@ class CobolProjectViewer():
             bootstyle="secondary-outline",
             command=self.refresh_project
         )
+        self.lbl_project = tk.Label(
+            topbar,
+            text="REFRESH",
+            bg="#252526",
+            fg="#888888",
+            font=("Consolas", 10),
+        )
+        self.lbl_project.pack(side=tk.LEFT, padx=20, pady=6)
         self.btn_refresh.image = img_refresh
         self.btn_refresh.pack(side=tk.LEFT, padx=6, pady=3)
 
@@ -240,7 +274,7 @@ class CobolProjectViewer():
         
         self.tree.delete(*self.tree.get_children())
         self.tables.clear()
-        
+
         self.root.after(100, lambda: self._do_refresh())
 
     def _do_refresh(self):
